@@ -177,7 +177,9 @@ double newton(double a, double b, double x0, double eps, int maxlap, int bac) {
 
 // Kiểm tra hội tụ Furie
 int furie(int bac, double a, double b) {
-    // 1️. Kiểm tra f'(x) không đổi dấu trên [a,b]
+    // 1. Nếu đa thức bậc 1 thì luôn hội tụ
+    if (bac == 1) return 1;
+    // 2. Kiểm tra f'(x) không đổi dấu trên [a,b]
     int cungDau1 = daoham_f(a, bac) >= 0;
     for (double i = a; i <= b; i += 0.01) {
         if ((daoham_f(i, bac) >= 0) != cungDau1) {
@@ -186,7 +188,7 @@ int furie(int bac, double a, double b) {
         }
     }
 
-    // 2️. Kiểm tra f''(x) không đổi dấu
+    // 3. Kiểm tra f''(x) không đổi dấu
     int cungDau2 = daoham2_f(a, bac) >= 0;
     for (double i = a; i <= b; i += 0.01) {
         if ((daoham2_f(i, bac) >= 0) != cungDau2) {
@@ -195,7 +197,7 @@ int furie(int bac, double a, double b) {
         }
     }
 
-    // 3️. Chọn điểm bắt đầu x0
+    // 4. Chọn điểm bắt đầu x0
     if (f(a, bac) * daoham2_f(a, bac) > 0)
         return 1; // Dùng a làm x0
     else if (f(b, bac) * daoham2_f(b, bac) > 0)
