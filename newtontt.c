@@ -41,8 +41,7 @@ int main() {
     // Kiểm tra điều kiện hội tụ Furie
     int check = furie(bac, a, b);
     if (check == 0) {
-        printf(">> Phuong phap Newton khong hoi tu tren doan [%.3lf, %.3lf].\n", a, b);
-        return 0;
+        printf(">> Canh bao: Dieu kien hoi tu khong chac chan, van thu chay Newton...\n");
     }
 
     // Chọn điểm bắt đầu x0
@@ -147,9 +146,14 @@ double newton(double a, double b, double x0, double eps, int maxlap, int bac) {
     printf("| LAN LAP    | x (x_k+1)        | SAI SO           |\n");
     printf("|------------|------------------|------------------|\n");
 
-while (saiso > eps && lap < maxlap && (x >= a && x <= b)) {
+while (saiso > eps && lap < maxlap) {
     double fx = f(x, bac);
     double fdx = daoham_f(x, bac);
+
+    if (x < a || x > b) {
+    printf(">> Canh bao: Newton nhay ra ngoai khoang, dung lai tai x = %.6lf\n", x);
+    break;
+    }
 
     if (fabs(fdx) < 1e-12) {
         printf(">> Dao ham f'(x) = 0 tai x = %.6lf. Dung lai.\n", x);
@@ -188,23 +192,28 @@ int furie(int bac, double a, double b) {
     if (bac == 1) return 1;
     // 2. Kiểm tra f'(x) không đổi dấu trên [a,b]
     int cungDau1 = daoham_f(a, bac) >= 0;
+    int doiDau1 = 0;
     for (double i = a; i <= b; i += 0.01) {
         if ((daoham_f(i, bac) >= 0) != cungDau1) {
-            printf(">> Dao ham cap 1 doi dau tren [%.2lf, %.2lf] -> Khong hoi tu.\n", a, b);
-            return 0;
+            doiDau1 = 1;
+            break;
         }
     }
 
     // 3. Kiểm tra f''(x) không đổi dấu
     int cungDau2 = daoham2_f(a, bac) >= 0;
+    int doiDau2 = 0;
     for (double i = a; i <= b; i += 0.01) {
         if ((daoham2_f(i, bac) >= 0) != cungDau2) {
-            printf(">> Dao ham cap 2 doi dau tren [%.2lf, %.2lf] -> Khong hoi tu.\n", a, b);
-            return 0;
+            doiDau2 = 1;
+            break;
         }
     }
+    if (doiDau1 || doiDau2)
+        printf(">> Canh bao: Dao ham doi dau tren [%.2lf, %.2lf], ket qua co the hoi tu cham hon.\n", a, b);
 
-    // 4. Chọn điểm bắt đầu x0
+
+    //4. Chọn điểm bắt đầu x0
     if (f(a, bac) * daoham2_f(a, bac) > 0)
         return 1; // Dùng a làm x0
     else if (f(b, bac) * daoham2_f(b, bac) > 0)
