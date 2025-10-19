@@ -136,22 +136,25 @@ double newton(double a, double b, double x0, double eps, int maxlap, int bac) {
     if (bac == 1) {
         double fx = f(x0, bac);
         double fdx = daoham_f(x0, bac);
-        if (fabs(fdx) < 1e-12) {
-            printf(">> Dao ham f'(x) = 0. Khong the ap dung Newton.\n");
-            return x0;
-        }
-        double x1 = x0 - fx / fdx;
-        double saiso = fabs(x1 - x0);
-        printf("|---------|---------------|--------|\n");
-        printf("| LAN LAP | GIA TRI CUA x | SAI SO |\n");
-        printf("|---------|---------------|--------|\n");
-        printf("|%-9d|%-15lf|%-8lf|\n", 1, x1, saiso);
-        printf("|---------|---------------|--------|\n");
-        printf(">> Nghiem gan dung: %f\n", x1);
-        printf(">> So lan lap: 1\n");
-        printf(">> Sai so: %lf\n", saiso);
-        return x1;
+    if (fabs(fdx) < 1e-12) {
+        printf(">> Dao ham f'(x) = 0. Khong the ap dung Newton.\n");
+        return x0;
     }
+
+    double x1 = x0 - fx / fdx;
+    double saiso = fabs(f(x1, bac)); // Sửa ở đây: sai số = |f(x1)|
+
+    printf("|---------|---------------|--------|\n");
+    printf("| LAN LAP | GIA TRI CUA x | SAI SO |\n");
+    printf("|---------|---------------|--------|\n");
+    printf("|%-9d|%-15lf|%-8lf|\n", 1, x1, saiso);
+    printf("|---------|---------------|--------|\n");
+    printf(">> Nghiem gan dung: %f\n", x1);
+    printf(">> So lan lap: 1\n");
+    printf(">> Sai so: %lf\n", saiso);
+    return x1;
+}
+
 
     double x = x0, saiso = 1e9; // Sai số khởi tạo lớn để bắt đầu vòng lặp
     int lap = 0;
