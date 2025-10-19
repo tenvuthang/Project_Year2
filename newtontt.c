@@ -132,6 +132,27 @@ double daoham2_f(double x, int bac) {
 
 // Thuật toán Newton tìm nghiệm gần đúng
 double newton(double a, double b, double x0, double eps, int maxlap, int bac) {
+    // Xử lý riêng cho bậc nhất: chỉ lặp 1 lần
+    if (bac == 1) {
+        double fx = f(x0, bac);
+        double fdx = daoham_f(x0, bac);
+        if (fabs(fdx) < 1e-12) {
+            printf(">> Dao ham f'(x) = 0. Khong the ap dung Newton.\n");
+            return x0;
+        }
+        double x1 = x0 - fx / fdx;
+        double saiso = fabs(x1 - x0);
+        printf("|---------|---------------|--------|\n");
+        printf("| LAN LAP | GIA TRI CUA x | SAI SO |\n");
+        printf("|---------|---------------|--------|\n");
+        printf("|%-9d|%-15lf|%-8lf|\n", 1, x1, saiso);
+        printf("|---------|---------------|--------|\n");
+        printf(">> Nghiem gan dung: %f\n", x1);
+        printf(">> So lan lap: 1\n");
+        printf(">> Sai so: %lf\n", saiso);
+        return x1;
+    }
+
     double x = x0, saiso = 1e9; // Sai số khởi tạo lớn để bắt đầu vòng lặp
     int lap = 0;
 
@@ -169,8 +190,14 @@ double newton(double a, double b, double x0, double eps, int maxlap, int bac) {
     return x;
 }
 
-// Hàm kiểm tra điều kiện hội tụ Furie (làm chặt)
+// Hàm kiểm tra điều kiện hội tụ Furie 
 int furie(int bac, double a, double b) {
+    if (bac == 1) {
+        // Bậc nhất luôn hội tụ vì là hàm tuyến tính
+        printf(">> Da thuc bac nhat, luon hoi tu voi 1 nghiem duy nhat.\n");
+        return 1; // Chọn a làm điểm bắt đầu
+    }
+
     int dauDaoHam1 = daoham_f(a, bac) >= 0; // Dấu của f'(x) tại a
     for (double i = a; i <= b; i += 0.01)
         if ((daoham_f(i, bac) >= 0) != dauDaoHam1) return -2; // f' đổi dấu → không hội tụ
@@ -180,8 +207,8 @@ int furie(int bac, double a, double b) {
         if ((daoham2_f(i, bac) >= 0) != dauDaoHam2) return -2; // f'' đổi dấu → không hội tụ
 
     // Chọn hướng hội tụ theo dấu f * f''
-    if (f(a, bac) * daoham2_f(a, bac) > 0) return 1; // Chọn a
-    if (f(b, bac) * daoham2_f(b, bac) > 0) return -1; // Chọn b
+    if (f(a, bac) * daoham2_f(a, bac) > 0) return 1;
+    if (f(b, bac) * daoham2_f(b, bac) > 0) return -1;
 
-    return 0; // Không xác định được hướng
+    return 0;
 }
