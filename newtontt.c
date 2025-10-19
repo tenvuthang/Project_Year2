@@ -142,9 +142,9 @@ double newton(double a, double b, double x0, double eps, int maxlap, int bac) {
     double saiso = 1e9; // Khởi tạo sai số 1 tỷ để vào vòng lặp, vì điều kiện sai số ban đầu cần > eps
     int lap = 0; // Biến đếm số lần lặp
 
-    printf("\n|---------|------------------|------------------|\n");
-    printf("|  LAN LAP |     x (x_k+1)   |      SAI SO      |\n");
-    printf("|----------|-----------------|------------------|\n");
+    printf("\n|------------|------------------|------------------|\n");
+    printf("| LAN LAP    | x (x_k+1)        | SAI SO           |\n");
+    printf("|------------|------------------|------------------|\n");
 
     while (saiso > eps && lap < maxlap && (x >= a && x <= b)) {
         double fx = f(x, bac);
@@ -160,10 +160,10 @@ double newton(double a, double b, double x0, double eps, int maxlap, int bac) {
         x = x_sau;
         lap++;
 
-        printf("|%-9d|%-17.10lf|%-17.10lf|\n", lap, x, saiso);
+        printf("| %-10d | %-16.10lf | %-16.10lf |\n", lap, x, saiso);
     }
 
-    printf("|----------|-----------------|------------------|\n");
+    printf("|------------|------------------|------------------|\n");
 
     if (saiso > eps)
         printf(">> Khong tim thay nghiem trong khoang [%.3lf, %.3lf]\n", a, b);
