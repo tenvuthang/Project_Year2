@@ -141,37 +141,44 @@ double newton(double a, double b, double x0, double eps, int maxlap, int bac) {
     double x = x0; // Điểm bắt đầu
     double saiso = 1e9; // Khởi tạo sai số 1 tỷ để vào vòng lặp, vì điều kiện sai số ban đầu cần > eps
     int lap = 0; // Biến đếm số lần lặp
+    int found = 0; // Biến kiểm tra tìm thấy nghiệm
 
     printf("\n|------------|------------------|------------------|\n");
     printf("| LAN LAP    | x (x_k+1)        | SAI SO           |\n");
     printf("|------------|------------------|------------------|\n");
 
-    while (saiso > eps && lap < maxlap && (x >= a && x <= b)) {
-        double fx = f(x, bac);
-        double fdx = daoham_f(x, bac);
+while (saiso > eps && lap < maxlap && (x >= a && x <= b)) {
+    double fx = f(x, bac);
+    double fdx = daoham_f(x, bac);
 
-        if (fabs(fdx) < 1e-12) {
-            printf(">> Dao ham f'(x) = 0 tai x = %.6lf. Dung lai.\n", x);
-            return x;
-        }
-
-        double x_sau = x - fx / fdx;
-        saiso = fabs(x_sau - x);
-        x = x_sau;
-        lap++;
-
-        printf("| %-10d | %-16.10lf | %-16.10lf |\n", lap, x, saiso);
+    if (fabs(fdx) < 1e-12) {
+        printf(">> Dao ham f'(x) = 0 tai x = %.6lf. Dung lai.\n", x);
+        return x;
     }
 
-    printf("|------------|------------------|------------------|\n");
+    double x_sau = x - fx / fdx;
+    saiso = fabs(x_sau - x);
+    x = x_sau;
+    lap++;
 
-    if (saiso > eps)
-        printf(">> Khong tim thay nghiem trong khoang [%.3lf, %.3lf]\n", a, b);
-    else {
-        printf(">> Nghiem gan dung: %.10lf\n", x);
-        printf(">> Sai so: %.10lf\n", saiso);
-        printf(">> So lan lap: %d\n", lap);
-    }
+    double fx_sau = f(x, bac);
+    // Nếu f(x) đã gần 0 thì gán sai số = 0 cho hiển thị đẹp
+    if (fabs(fx_sau) < eps) saiso = 0.0;
+
+    printf("| %-10d | %-16.10lf | %-16.10lf |\n", lap, x, saiso);
+
+    if (fabs(fx_sau) < eps)
+        break;
+}
+printf("|------------|------------------|------------------|\n");
+
+if (saiso > eps && !found)
+    printf(">> Khong tim thay nghiem trong khoang [%.3lf, %.3lf]\n", a, b);
+else {
+    printf(">> Nghiem gan dung: %.10lf\n", x);
+    printf(">> Sai so: %.10lf\n", saiso);
+    printf(">> So lan lap: %d\n", lap);
+}
     return x;
 }
 
