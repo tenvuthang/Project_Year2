@@ -34,9 +34,23 @@ int main() {
     printf("Nhap khoang phan li nghiem [a,b]: ");
     scanf("%lf %lf", &a, &b);
 
+    // Nếu người dùng nhập ngược (a > b) thì tự động hoán đổi
+    if (a > b) {
+    double tmp = a;
+    a = b;
+    b = tmp;
+    printf(">> Canh bao: a > b, tu dong hoan doi lai thanh [%.3lf, %.3lf]\n", a, b);
+    }
+
     double eps;
     printf("Nhap sai so cho phep epsilon: ");
     scanf("%lf", &eps);
+
+    // Kiểm tra epsilon hợp lệ
+    if (eps <= 0) {
+    eps = 1e-6;
+    printf(">> Canh bao: Sai so khong hop le, tu dong dat epsilon = 1e-6\n");
+    }
 
     // Kiểm tra điều kiện hội tụ Furie
     int check = furie(bac, a, b);
@@ -47,6 +61,9 @@ int main() {
     // Chọn điểm bắt đầu x0
     double x0 = (check == 1) ? a : b;
     int maxlap = 100; // Giới hạn số vòng lặp
+
+    // In điểm bắt đầu
+    printf(">> Bat dau Newton voi x0 = %.6lf\n", x0);
 
     // Gọi thuật toán Newton
     newton(a, b, x0, eps, maxlap, bac);
