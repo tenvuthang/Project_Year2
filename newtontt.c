@@ -230,16 +230,13 @@ int furie(int bac, double a, double b) {
         }
     }
 
-    // 4. Cảnh báo nếu đạo hàm đổi dấu
-    if (doiDau1) {
-        printf(">> Canh bao: Dao ham doi dau tren [%.2lf, %.2lf] -> Furie khong hoi tu.\n", a, b);
-        return 0; // Dừng ngay vì đạo hàm đổi dấu trong khoảng
+    // 4. Nếu f'(x) hoặc f''(x) đổi dấu -> Furie KHÔNG hội tụ
+    if (doiDau1 || doiDau2) {
+        printf(">> Canh bao: Dao ham doi dau tren [%.2lf, %.2lf] -> Dieu kien Furie KHONG hoi tu.\n", a, b);
+        return 0; // Không hội tụ theo Furie
     }
 
-    if (doiDau2)
-        printf(">> Canh bao: Dao ham cap 2 doi dau tren [%.2lf, %.2lf], co the hoi tu cham hon.\n", a, b);
-
-    // 5. Nếu đạo hàm không đổi dấu, coi như Furie hội tụ
+    // 5. Nếu đạo hàm bậc 1 và 2 đều không đổi dấu, Furie hội tụ
     return 1;
 }
 
