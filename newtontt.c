@@ -56,6 +56,9 @@ int main() {
     int check = furie(bac, a, b);
     if (check == 0) {
         printf(">> Canh bao: Dieu kien hoi tu khong chac chan, van thu chay Newton...\n");
+    // Chú thích: Cho phép chạy Newton ngay cả khi Furie không hội tụ để quan sát thực tế.
+    // Đây là mở rộng có kiểm soát, không vi phạm bản chất thuật toán.
+
     }
 
     // Chọn điểm bắt đầu x0
