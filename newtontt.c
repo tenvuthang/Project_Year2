@@ -55,10 +55,9 @@ int main() {
     // Kiểm tra điều kiện hội tụ Furie
     int check = furie(bac, a, b);
     if (check == 0) {
-        printf(">> Canh bao: Dieu kien hoi tu khong chac chan, van thu chay Newton...\n");
-    // Chú thích: Cho phép chạy Newton ngay cả khi Furie không hội tụ để quan sát thực tế.
-    // Đây là mở rộng có kiểm soát, không vi phạm bản chất thuật toán.
-
+        printf(">> Loi: Dieu kien Furie khong duoc dam bao. Dung chuong trinh tai day.\n");
+        printf(">> Vui long chon khoang khac hoac kiem tra lai ham so.\n");
+        return 0;
     }
 
     // Chọn điểm bắt đầu x0
@@ -210,7 +209,8 @@ else {
 int furie(int bac, double a, double b) {
     // 1. Nếu đa thức bậc 1 thì luôn hội tụ
     if (bac == 1) return 1;
-    // 2. Kiểm tra f'(x) không đổi dấu trên [a,b]
+
+    // 2. Kiểm tra f'(x) có đổi dấu trên [a,b] hay không
     int cungDau1 = daoham_f(a, bac) >= 0;
     int doiDau1 = 0;
     for (double i = a; i <= b; i += 0.01) {
@@ -220,7 +220,7 @@ int furie(int bac, double a, double b) {
         }
     }
 
-    // 3. Kiểm tra f''(x) không đổi dấu
+    // 3. Kiểm tra f''(x) có đổi dấu hay không
     int cungDau2 = daoham2_f(a, bac) >= 0;
     int doiDau2 = 0;
     for (double i = a; i <= b; i += 0.01) {
@@ -229,17 +229,19 @@ int furie(int bac, double a, double b) {
             break;
         }
     }
-    if (doiDau1 || doiDau2)
-        printf(">> Canh bao: Dao ham doi dau tren [%.2lf, %.2lf], ket qua co the hoi tu cham hon.\n", a, b);
 
+    // 4. Cảnh báo nếu đạo hàm đổi dấu
+    if (doiDau1) {
+        printf(">> Canh bao: Dao ham doi dau tren [%.2lf, %.2lf] -> Furie khong hoi tu.\n", a, b);
+        return 0; // Dừng ngay vì đạo hàm đổi dấu trong khoảng
+    }
 
-    //4. Chọn điểm bắt đầu x0
-    if (f(a, bac) * daoham2_f(a, bac) > 0)
-        return 1; // Dùng a làm x0
-    else if (f(b, bac) * daoham2_f(b, bac) > 0)
-        return -1; // Dùng b làm x0
-    else
-        return 0;
+    if (doiDau2)
+        printf(">> Canh bao: Dao ham cap 2 doi dau tren [%.2lf, %.2lf], co the hoi tu cham hon.\n", a, b);
+
+    // 5. Nếu đạo hàm không đổi dấu, coi như Furie hội tụ
+    return 1;
 }
+
 
 
